@@ -8,3 +8,24 @@
 2019/09/15 13:53:37 [notice] 1620: worker process 1620 启动并开始运行......!
 2019/09/15 13:53:37 [notice] 1621: worker process 1621 启动并开始运行......!
 2019/09/15 13:53:37 [notice] 1622: worker process 1622 启动并开始运行......!
+2023/04/22 15:23:00 [notice] 8542: master process ./nginx 8542 启动并开始运行......!
+2023/04/22 15:23:00 [notice] 8543: worker process 8543 启动并开始运行......!
+2023/04/22 15:23:00 [notice] 8545: worker process 8545 启动并开始运行......!
+2023/04/22 15:23:00 [notice] 8546: worker process 8546 启动并开始运行......!
+2023/04/22 15:23:00 [notice] 8544: worker process 8544 启动并开始运行......!
+2023/04/22 15:24:28 [notice] 8552: master process ./nginx 8552 启动并开始运行......!
+2023/04/22 15:24:28 [notice] 8553: worker process 8553 启动并开始运行......!
+2023/04/22 15:24:28 [notice] 8554: worker process 8554 启动并开始运行......!
+2023/04/22 15:24:28 [notice] 8555: worker process 8555 启动并开始运行......!
+2023/04/22 15:24:28 [notice] 8556: worker process 8556 启动并开始运行......!
+2023/04/25 10:01:24 [notice] 3594: master process ./nginx 3594 启动并开始运行......!
+2023/04/25 10:01:24 [notice] 3595: worker process 3595 启动并开始运行......!
+2023/04/25 10:01:24 [notice] 3596: worker process 3596 启动并开始运行......!
+2023/04/25 10:01:24 [notice] 3597: worker process 3597 启动并开始运行......!
+2023/04/25 10:01:24 [notice] 3598: worker process 3598 启动并开始运行......!
+2023/04/25 10:02:09 [notice] 3594: signal 15 (SIGTERM) received from 2429
+2023/04/25 10:02:30 [notice] 3594: signal 15 (SIGTERM) received from 2429
+2023/04/25 10:02:46 [notice] 3595: signal 15 (SIGTERM) received from 2429
+2023/04/25 10:02:49 [notice] 3596: signal 15 (SIGTERM) received from 2429
+2023/04/25 10:03:09 [notice] 3594: signal 15 (SIGTERM) received from 3585
+2023/04/25 10:05:50 [notice] 3594: signal 15 (SIGTERM) received from 3585

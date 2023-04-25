@@ -54,16 +54,26 @@ bool CConfig::Load(const char *pconfName)
         if(*linebuf==';' || *linebuf==' ' || *linebuf=='#' || *linebuf=='\t'|| *linebuf=='\n')
 			continue;
         
-    lblprocstring:
+    // lblprocstring:
+    //     //屁股后边若有换行，回车，空格等都截取掉
+	// 	if(strlen(linebuf) > 0)
+	// 	{
+	// 		if(linebuf[strlen(linebuf)-1] == 10 || linebuf[strlen(linebuf)-1] == 13 || linebuf[strlen(linebuf)-1] == 32) 
+	// 		{
+	// 			linebuf[strlen(linebuf)-1] = 0;
+	// 			goto lblprocstring;
+	// 		}		
+	// 	}
         //屁股后边若有换行，回车，空格等都截取掉
-		if(strlen(linebuf) > 0)
+		do
 		{
 			if(linebuf[strlen(linebuf)-1] == 10 || linebuf[strlen(linebuf)-1] == 13 || linebuf[strlen(linebuf)-1] == 32) 
 			{
 				linebuf[strlen(linebuf)-1] = 0;
-				goto lblprocstring;
 			}		
 		}
+        while(strlen(linebuf) > 0);
+        
         if(linebuf[0] == 0)
             continue;
         if(*linebuf=='[') //[开头的也不处理
