@@ -1,5 +1,9 @@
 ﻿//和处理系统配置文件相关的放这里
-
+/*
+公众号：程序员速成     q群：716480601
+王健伟老师 《Linux C++通讯架构实战》
+商业级质量的代码，完整的项目，帮你提薪至少10K
+*/
 //系统头文件放上边
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,6 +31,7 @@ CConfig::~CConfig()
 		delete (*pos);
 	}//end for
 	m_ConfigItemList.clear(); 
+    return;
 }
 
 //装载配置文件
@@ -54,26 +59,16 @@ bool CConfig::Load(const char *pconfName)
         if(*linebuf==';' || *linebuf==' ' || *linebuf=='#' || *linebuf=='\t'|| *linebuf=='\n')
 			continue;
         
-    // lblprocstring:
-    //     //屁股后边若有换行，回车，空格等都截取掉
-	// 	if(strlen(linebuf) > 0)
-	// 	{
-	// 		if(linebuf[strlen(linebuf)-1] == 10 || linebuf[strlen(linebuf)-1] == 13 || linebuf[strlen(linebuf)-1] == 32) 
-	// 		{
-	// 			linebuf[strlen(linebuf)-1] = 0;
-	// 			goto lblprocstring;
-	// 		}		
-	// 	}
+    lblprocstring:
         //屁股后边若有换行，回车，空格等都截取掉
-		do
+		if(strlen(linebuf) > 0)
 		{
 			if(linebuf[strlen(linebuf)-1] == 10 || linebuf[strlen(linebuf)-1] == 13 || linebuf[strlen(linebuf)-1] == 32) 
 			{
 				linebuf[strlen(linebuf)-1] = 0;
+				goto lblprocstring;
 			}		
 		}
-        while(strlen(linebuf) > 0);
-        
         if(linebuf[0] == 0)
             continue;
         if(*linebuf=='[') //[开头的也不处理

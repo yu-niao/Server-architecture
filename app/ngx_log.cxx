@@ -1,5 +1,9 @@
 ﻿//和日志相关的函数放之类
-
+/*
+公众号：程序员速成     q群：716480601
+王健伟老师 《Linux C++通讯架构实战》
+商业级质量的代码，完整的项目，帮你提薪至少10K
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -88,7 +92,10 @@ void ngx_log_stderr(int err, const char *fmt, ...)
 
     if(ngx_log.fd > STDERR_FILENO) //如果这是个有效的日志文件，本条件肯定成立，此时也才有意义将这个信息写到日志文件
     {
-        ngx_log_error_core(NGX_LOG_STDERR,err,(const char *)errstr); //这里有个\n，ngx_log_error_core还有个\n，所以写到日志会有一个空行多出来
+        //因为上边已经把err信息显示出来了，所以这里就不要显示了，否则显示重复了
+        err = 0;    //不要再次把错误信息弄到字符串里，否则字符串里重复了
+        p--;*p = 0; //把原来末尾的\n干掉，因为到ngx_log_err_core中还会加这个\n 
+        ngx_log_error_core(NGX_LOG_STDERR,err,(const char *)errstr); 
     }    
     return;
 }

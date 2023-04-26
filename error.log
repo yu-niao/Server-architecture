@@ -1,0 +1,2 @@
+2023/04/26 16:48:30 [stderr] 3823: nginx: CSocekt::Initialize()中bind()失败,i=0. (13: Permission denied) 
+2023/04/26 16:48:30 [stderr] 3823: nginx: 程序退出，再见了!

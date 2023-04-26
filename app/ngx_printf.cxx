@@ -1,5 +1,9 @@
 ﻿//和打印格式相关的函数放这里
-
+/*
+公众号：程序员速成     q群：716480601
+王健伟老师 《Linux C++通讯架构实战》
+商业级质量的代码，完整的项目，帮你提薪至少10K
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,7 +17,6 @@
 //只用于本文件的一些函数声明就放在本文件中
 static u_char *ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64,u_char zero, uintptr_t hexadecimal, uintptr_t width);
 
-
 //----------------------------------------------------------------------------------------------------------------------
 //对于 nginx 自定义的数据结构进行标准格式化输出,就像 printf,vprintf 一样，我们顺道学习写这类函数到底内部是怎么实现的
 //该函数只不过相当于针对ngx_vslprintf()函数包装了一下，所以，直接研究ngx_vslprintf()即可
@@ -25,6 +28,19 @@ u_char *ngx_slprintf(u_char *buf, u_char *last, const char *fmt, ...)
     va_start(args, fmt); //使args指向起始的参数
     p = ngx_vslprintf(buf, last, fmt, args);
     va_end(args);        //释放args   
+    return p;
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+//和上边的ngx_snprintf非常类似
+u_char * ngx_snprintf(u_char *buf, size_t max, const char *fmt, ...)   //类printf()格式化函数，比较安全，max指明了缓冲区结束位置
+{
+    u_char   *p;
+    va_list   args;
+
+    va_start(args, fmt);
+    p = ngx_vslprintf(buf, buf + max, fmt, args);
+    va_end(args);
     return p;
 }
 
@@ -127,7 +143,7 @@ u_char *ngx_vslprintf(u_char *buf, u_char *last,const char *fmt,va_list args)
                 *buf++ = '%';
                 fmt++;
                 continue;
-
+        
             case 'd': //显示整型数据，如果和u配合使用，也就是%ud,则是显示无符号整型数据
                 if (sign)  //如果是有符号数
                 {
@@ -138,6 +154,42 @@ u_char *ngx_vslprintf(u_char *buf, u_char *last,const char *fmt,va_list args)
                     ui64 = (uint64_t) va_arg(args, u_int);    
                 }
                 break;  //这break掉，直接跳道switch后边的代码去执行,这种凡是break的，都不做fmt++;  *********************【switch后仍旧需要进一步处理】
+
+             case 'i': //转换ngx_int_t型数据，如果用%ui，则转换的数据类型是ngx_uint_t  
+                if (sign) 
+                {
+                    i64 = (int64_t) va_arg(args, intptr_t);
+                } 
+                else 
+                {
+                    ui64 = (uint64_t) va_arg(args, uintptr_t);
+                }
+
+                //if (max_width) 
+                //{
+                //    width = NGX_INT_T_LEN;
+                //}
+
+                break;    
+
+            case 'L':  //转换int64j型数据，如果用%uL，则转换的数据类型是uint64 t
+                if (sign)
+                {
+                    i64 = va_arg(args, int64_t);
+                } 
+                else 
+                {
+                    ui64 = va_arg(args, uint64_t);
+                }
+                break;
+
+            case 'p':  
+                ui64 = (uintptr_t) va_arg(args, void *); 
+                hex = 2;    //标记以大写字母显示十六进制中的A-F
+                sign = 0;   //标记这是个无符号数
+                zero = '0'; //前边0填充
+                width = 2 * sizeof(void *);
+                break;
 
             case 's': //一般用于显示字符串
                 p = va_arg(args, u_char *); //va_arg():遍历可变参数，var_arg的第二个参数表示遍历的这个可变的参数的类型
