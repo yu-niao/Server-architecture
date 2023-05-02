@@ -6,16 +6,16 @@
 #include <list>         //list
 #include <sys/epoll.h>  //epoll
 #include <sys/socket.h>
-#include <pthread.h>    //多线程
+#include <pthread.h>   
 #include <semaphore.h>  //信号量 
-#include <atomic>       //c++11里的原子操作
-#include <map>          //multimap
+#include <atomic>     
+#include <map>   
 
 #include "ngx_comm.h"
 
 //一些宏定义放在这里-----------------------------------------------------------
-#define NGX_LISTEN_BACKLOG  511    //已完成连接队列，nginx给511，我们也先按照这个来：不懂这个数字的同学参考第五章第四节
-#define NGX_MAX_EVENTS      512    //epoll_wait一次最多接收这么多个事件，nginx中缺省是512，我们这里固定给成512就行，没太大必要修改
+#define NGX_LISTEN_BACKLOG  511 
+#define NGX_MAX_EVENTS      512  
 
 typedef struct ngx_listening_s   ngx_listening_t, *lpngx_listening_t;
 typedef struct ngx_connection_s  ngx_connection_t,*lpngx_connection_t;
@@ -23,8 +23,6 @@ typedef class  CSocekt           CSocekt;
 
 typedef void (CSocekt::*ngx_event_handler_pt)(lpngx_connection_t c); //定义成员函数指针
 
-//--------------------------------------------
-//一些专用结构定义放在这里，暂时不考虑放ngx_global.h里了
 struct ngx_listening_s  //和监听端口有关的结构
 {
 	int                       port;        //监听的端口号
@@ -32,8 +30,6 @@ struct ngx_listening_s  //和监听端口有关的结构
 	lpngx_connection_t        connection;  //连接池中的一个连接，注意这是个指针 
 };
 
-//以下三个结构是非常重要的三个结构，我们遵从官方nginx的写法；
-//(1)该结构表示一个TCP连接【客户端主动发起的、Nginx服务器被动接受的TCP连接】
 struct ngx_connection_s
 {		
 	ngx_connection_s();                                      //构造函数
@@ -217,10 +213,6 @@ private:
 	std::list<lpngx_connection_t>  m_recyconnectionList;                  //将要释放的连接放这里
 	std::atomic<int>               m_totol_recyconnection_n;              //待释放连接队列大小
 	int                            m_RecyConnectionWaitTime;              //等待这么些秒后才回收连接
-
-
-	//lpngx_connection_t             m_pfree_connections;                //空闲连接链表头，连接池中总是有某些连接被占用，为了快速在池中找到一个空闲的连接，我把空闲的连接专门用该成员记录;
-	                                                                        //【串成一串，其实这里指向的都是m_pconnections连接池里的没有被使用的成员】
 	
 	
 	

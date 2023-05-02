@@ -1,9 +1,4 @@
-﻿//和打印格式相关的函数放这里
-/*
-公众号：程序员速成     q群：716480601
-王健伟老师 《Linux C++通讯架构实战》
-商业级质量的代码，完整的项目，帮你提薪至少10K
-*/
+﻿
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,9 +12,7 @@
 //只用于本文件的一些函数声明就放在本文件中
 static u_char *ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64,u_char zero, uintptr_t hexadecimal, uintptr_t width);
 
-//----------------------------------------------------------------------------------------------------------------------
-//对于 nginx 自定义的数据结构进行标准格式化输出,就像 printf,vprintf 一样，我们顺道学习写这类函数到底内部是怎么实现的
-//该函数只不过相当于针对ngx_vslprintf()函数包装了一下，所以，直接研究ngx_vslprintf()即可
+
 u_char *ngx_slprintf(u_char *buf, u_char *last, const char *fmt, ...) 
 {
     va_list   args;
@@ -31,8 +24,7 @@ u_char *ngx_slprintf(u_char *buf, u_char *last, const char *fmt, ...)
     return p;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
-//和上边的ngx_snprintf非常类似
+
 u_char * ngx_snprintf(u_char *buf, size_t max, const char *fmt, ...)   //类printf()格式化函数，比较安全，max指明了缓冲区结束位置
 {
     u_char   *p;
@@ -44,30 +36,14 @@ u_char * ngx_snprintf(u_char *buf, size_t max, const char *fmt, ...)   //类prin
     return p;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
-//对于 nginx 自定义的数据结构进行标准格式化输出,就像 printf,vprintf 一样，我们顺道学习写这类函数到底内部是怎么实现的
-//例如，给进来一个 "abc = %d",13   ,最终buf里得到的应该是   abc=13 这种结果
-//buf：往这里放数据
-//last：放的数据不要超过这里
-//fmt：以这个为首的一系列可变参数
-//支持的格式： %d【%Xd/%xd】:数字,    %s:字符串      %f：浮点,  %P：pid_t
-    //对于：ngx_log_stderr(0, "invalid option: \"%s\",%d", "testinfo",123);
-       //fmt = "invalid option: \"%s\",%d"
-       //args = "testinfo",123
+
 u_char *ngx_vslprintf(u_char *buf, u_char *last,const char *fmt,va_list args)
 {
-    //比如说你要调用ngx_log_stderr(0, "invalid option: \"%s\"", argv[i]);，那么这里的fmt就应该是:   invalid option: "%s"
-    //printf("fmt = %s\n",fmt);
+
     
     u_char     zero;
 
-    /*
-    #ifdef _WIN64
-        typedef unsigned __int64  uintptr_t;
-    #else
-        typedef unsigned int uintptr_t;
-    #endif
-    */
+  
     uintptr_t  width,sign,hex,frac_width,scale,n;  //临时用到的一些变量
 
     int64_t    i64;   //保存%d对应的可变参
@@ -280,8 +256,6 @@ u_char *ngx_vslprintf(u_char *buf, u_char *last,const char *fmt,va_list args)
                 }
             } //end if (sign) 
 
-            //把一个数字 比如“1234567”弄到buffer中显示，如果是要求10位，则前边会填充3个空格比如“   1234567”
-            //注意第5个参数hex，是否以16进制显示，比如如果你是想以16进制显示一个数字则可以%Xd或者%xd，此时hex = 2或者1
             buf = ngx_sprintf_num(buf, last, ui64, zero, hex, width); 
             fmt++;
         }
@@ -295,16 +269,6 @@ u_char *ngx_vslprintf(u_char *buf, u_char *last,const char *fmt,va_list args)
     return buf;
 }
 
-//----------------------------------------------------------------------------------------------------------------------
-//以一个指定的宽度把一个数字显示在buf对应的内存中, 如果实际显示的数字位数 比指定的宽度要小 ,比如指定显示10位，而你实际要显示的只有“1234567”，那结果可能是会显示“   1234567”
-     //当然如果你不指定宽度【参数width=0】，则按实际宽度显示
-     //你给进来一个%Xd之类的，还能以十六进制数字格式显示出来
-//buf：往这里放数据
-//last：放的数据不要超过这里
-//ui64：显示的数字         
-//zero:显示内容时，格式字符%后边接的是否是个'0',如果是zero = '0'，否则zero = ' ' 【一般显示的数字位数不足要求的，则用这个字符填充】，比如要显示10位，而实际只有7位，则后边填充3个这个字符；
-//hexadecimal：是否显示成十六进制数字 0：不
-//width:显示内容时，格式化字符%后接的如果是个数字比如%16，那么width=16，所以这个是希望显示的宽度值【如果实际显示的内容不够，则后头用0填充】
 static u_char * ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char zero, uintptr_t hexadecimal, uintptr_t width)
 {
     //temp[21]
@@ -322,8 +286,7 @@ static u_char * ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char
         if (ui64 <= (uint64_t) NGX_MAX_UINT32_VALUE)   //NGX_MAX_UINT32_VALUE :最大的32位无符号数：十进制是‭4294967295‬
         {
             ui32 = (uint32_t) ui64; //能保存下
-            do  //这个循环能够把诸如 7654321这个数字保存成：temp[13]=7,temp[14]=6,temp[15]=5,temp[16]=4,temp[17]=3,temp[18]=2,temp[19]=1
-                  //而且的包括temp[0..12]以及temp[20]都是不确定的值
+            do  
             {
                 *--p = (u_char) (ui32 % 10 + '0');  //把屁股后边这个数字拿出来往数组里装，并且是倒着装：屁股后的也往数组下标大的位置装；
             }
@@ -339,16 +302,12 @@ static u_char * ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char
     }
     else if (hexadecimal == 1)  //如果显示一个十六进制数字，格式符为：%xd，则这个条件成立，要以16进制数字形式显示出来这个十进制数,a-f小写
     {
-        //比如我显示一个1,234,567【十进制数】，他对应的二进制数实际是 12 D687 ，那怎么显示出这个12D687来呢？
+     
         do 
         {            
-            //0xf就是二进制的1111,大家都学习过位运算，ui64 & 0xf，就等于把 一个数的最末尾的4个二进制位拿出来；
-            //ui64 & 0xf  其实就能分别得到 这个16进制数也就是 7,8,6,D,2,1这个数字，转成 (uint32_t) ，然后以这个为hex的下标，找到这几个数字的对应的能够显示的字符；
+           
             *--p = hex[(uint32_t) (ui64 & 0xf)];    
-        } while (ui64 >>= 4);    //ui64 >>= 4     --->   ui64 = ui64 >> 4 ,而ui64 >> 4是啥，实际上就是右移4位，就是除以16,因为右移4位就等于移动了1111；
-                                 //相当于把该16进制数的最末尾一位干掉，原来是 12 D687, >> 4后是 12 D68，如此反复，最终肯定有=0时导致while不成立退出循环
-                                  //比如 1234567 / 16 = 77160(0x12D68) 
-                                  // 77160 / 16 = 4822(0x12D6)
+        } while (ui64 >>= 4);   
     } 
     else // hexadecimal == 2    //如果显示一个十六进制数字，格式符为：%Xd，则这个条件成立，要以16进制数字形式显示出来这个十进制数,A-F大写
     { 
@@ -369,9 +328,7 @@ static u_char * ngx_sprintf_num(u_char *buf, u_char *last, uint64_t ui64, u_char
     }
     
     len = (temp + NGX_INT64_LEN) - p; //还原这个len，也就是要显示的数字的实际宽度【因为上边这个while循环改变了len的值】
-    //现在还没把实际的数字比如“7654321”往buf里拷贝呢，要准备拷贝
 
-    //如下这个等号是我加的【我认为应该加等号】，nginx源码里并没有加;***********************************************
     if((buf + len) >= last)   //发现如果往buf里拷贝“7654321”后，会导致buf不够长【剩余的空间不够拷贝整个数字】
     {
         len = last - buf; //剩余的buf有多少我就拷贝多少

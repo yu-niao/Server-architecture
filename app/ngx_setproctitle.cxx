@@ -1,9 +1,4 @@
-﻿//和设置课执行程序标题（名称）相关的放这里 
-/*
-公众号：程序员速成     q群：716480601
-王健伟老师 《Linux C++通讯架构实战》
-商业级质量的代码，完整的项目，帮你提薪至少10K
-*/
+﻿
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>  //env
@@ -33,8 +28,7 @@ void ngx_init_setproctitle()
 //设置可执行程序标题
 void ngx_setproctitle(const char *title)
 {
-    //我们假设，所有的命令 行参数我们都不需要用到了，可以被随意覆盖了；
-    //注意：我们的标题长度，不会长到原始标题和原始环境变量都装不下，否则怕出问题，不处理
+ 
     
     //(1)计算新标题长度
     size_t ititlelen = strlen(title); 
